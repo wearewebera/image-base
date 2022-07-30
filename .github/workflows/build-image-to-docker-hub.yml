@@ -6,7 +6,7 @@
 #  * Push image to Docker HUB except when trigged by Pull Request;
 #
 #  This action should be used for public and privates images;
-#  Please, set repository as private on Docker HUB settings;
+#  Please, set image as private on Docker HUB settings as need;
 #
 
 # Workflow name
