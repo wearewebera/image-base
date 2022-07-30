@@ -49,6 +49,7 @@ jobs:
 
       - name: Docker build and push
         uses: docker/build-push-action@v3
+        if: ${{ github.event_name != 'pull_request' }}
         with:
           push: true
           tags: webera/${{ github.event.repository.name }}:latest,webera/${{ github.event.repository.name }}:${{ steps.tag.outputs.value }}
