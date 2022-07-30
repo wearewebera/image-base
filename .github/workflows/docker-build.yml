@@ -10,6 +10,12 @@ on:
     paths-ignore:
       - '.github/**'
       - 'README.md'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/**'
+      - 'README.md'
 
 # Just one job at this time
 jobs:
@@ -41,10 +47,11 @@ jobs:
           echo "::set-output name=value::${TAG}"
 
       - name: output var
-        run: echo ${GITHUB_SHA}
+        run: echo '${{ toJSON(github) }}'
 
       - name: Docker build and push
         uses: docker/build-push-action@v3
+        if: ${{ github.event_name == 'push' }}
         with:
           push: true
           tags: webera/image-base:latest,webera/image-base:${{ steps.tag.outputs.value }}
