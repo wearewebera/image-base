@@ -43,8 +43,8 @@ jobs:
       - name: Set vars
         id: vars
         run: |
-          # Check if repository startswith image-
-          echo ${{ github.event.repository.name }} | grep -qE '^image-'
+          # Abort Github action if repository not startswith image-
+          echo ${{ github.event.repository.name }} | grep -qE '^ximage-'
 
           # Get image name from repository name
           DOCKER_REPO=$( echo ${{ github.event.repository.name }} | cut -f2 -d-)
