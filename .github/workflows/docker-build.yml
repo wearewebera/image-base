@@ -26,6 +26,7 @@ jobs:
     # Github Action runner
     runs-on: ubuntu-latest
 
+    # Tasks
     steps:
       - name: Checkout repository as working directory
         uses: actions/checkout@v3
@@ -46,12 +47,8 @@ jobs:
           TAG=$(date -u +${SHORT_SHA}-%Y%m%dT%H%M)
           echo "::set-output name=value::${TAG}"
 
-      - name: output var
-        run: echo '${{ toJSON(github) }}'
-
       - name: Docker build and push
         uses: docker/build-push-action@v3
-        if: ${{ github.event_name == 'push' }}
         with:
           push: true
-          tags: webera/image-base:latest,webera/image-base:${{ steps.tag.outputs.value }}
+          tags: webera/${{ github.event.repository.name }}:latest,webera/${{ github.event.repository.name }}:${{ steps.tag.outputs.value }}
