@@ -47,5 +47,4 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags:
-            - webera/image-base:latest,webera/image-base:${{ steps.tag.outputs.value }}
+          tags: webera/image-base:latest,webera/image-base:${{ steps.tag.outputs.value }}
