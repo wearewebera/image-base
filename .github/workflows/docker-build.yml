@@ -40,16 +40,27 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Set tag var
-        id: tag
+      - name: Set vars
+        id: vars
         run: |
+          # Check if repository startswith image-
+          echo ${{ github.event.repository.name }} | grep -qE '^image-'
+
+          # Get image name from repository name
+          DOCKER_REPO=$( echo ${{ github.event.repository.name }} | cut -f2 -d-)
+          echo "::set-output name=repo::${DOCKER_REPO}"
+
+          # Get TAG on format expected by Flux for correct sorting
           SHORT_SHA=$(git log --format="%H" -n 1 | cut -c1-7)
           TAG=$(date -u +${SHORT_SHA}-%Y%m%dT%H%M)
-          echo "::set-output name=value::${TAG}"
+          echo "::set-output name=tag::${TAG}"
+ 
+      - run: echo ${{ steps.vars.outputs.tag }}
+      - run: echo ${{ steps.vars.outputs.repo }}
 
-      - name: Docker build and push
-        uses: docker/build-push-action@v3
-        if: ${{ github.event_name != 'pull_request' }}
-        with:
-          push: true
-          tags: webera/${{ github.event.repository.name }}:latest,webera/${{ github.event.repository.name }}:${{ steps.tag.outputs.value }}
+#      - name: Docker build and push
+#        uses: docker/build-push-action@v3
+#        if: ${{ github.event_name != 'pull_request' }}
+#        with:
+#          push: true
+#          tags: webera/${{ steps.vars.outputs.repo }}:latest,webera/${{ steps.vars.outputs.repo }}:${{ steps.vars.outputs.tag }}
