@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - main
-    path-ignore:
+    paths-ignore:
       - '.github/**'
       - 'README.md'
 
@@ -33,17 +33,19 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Set TAG
+      - name: Set tag var
         id: tag
         run: |
           SHORT_SHA=$(git log --format="%H" -n 1 | cut -c1-7)
           TAG=$(date -u +${SHORT_SHA}-%Y%m%dT%H%M)
           echo "::set-output name=value::${TAG}"
 
+      - name: output var
+        run: echo ${GITHUB_SHA}
+
       - name: Docker build and push
         uses: docker/build-push-action@v3
         with:
           push: true
           tags:
-            - webera/image-base:latest
-            - webera/image-base:${{ steps.tag.outputs.value }}
+            - webera/image-base:latest,webera/image-base:${{ steps.tag.outputs.value }}
