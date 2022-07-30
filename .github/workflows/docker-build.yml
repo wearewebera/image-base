@@ -40,10 +40,10 @@ jobs:
           TAG=$(date -u +${SHORT_SHA}-%Y%m%dT%H%M)
           echo "::set-output name=value::${TAG}"
 
-#      - name: Build and push
-#        uses: docker/build-push-action@v3
-#        with:
-#          push: true
-#          tags:
-#            - webera/image-base:latest
-#            - webera/image-base:${{ steps.tag.outputs.value }}
+      - name: Docker build and push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags:
+            - webera/image-base:latest
+            - webera/image-base:${{ steps.tag.outputs.value }}
