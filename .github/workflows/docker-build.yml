@@ -26,6 +26,10 @@ jobs:
     # Github Action runner
     runs-on: ubuntu-latest
 
+    # Job condition to run
+    # Required because container image name is retrived from image-[NAME]
+    if: ${{ startsWith(github.event.repository.name, 'image-') }}
+
     # Tasks
     steps:
       - name: Checkout repository as working directory
