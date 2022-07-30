@@ -1,5 +1,16 @@
+#
+# Github Action to build container images to be available on Docker HUB.
+#
+#  * Repositories must be named as "image-[NAME]" or will be skipped;
+#  * Dockerfile is expected on repository root;
+#  * Push image to Docker HUB except when trigged by Pull Request;
+#
+#  This action should be used for public and privates images;
+#  Please, set repository as private on Docker HUB settings;
+#
+
 # Workflow name
-name: Docker Build
+name: Build Container Image to Docker HUB
 
 # Controls when the workflow will run
 on:
@@ -28,7 +39,7 @@ jobs:
 
     # Job condition to run
     # Required because container image name is retrived from image-[NAME]
-    if: ${{ startsWith(github.event.repository.name, 'image-') }}
+    if: startsWith(github.event.repository.name, 'image-')
 
     # Tasks
     steps:
@@ -51,7 +62,7 @@ jobs:
           echo ${{ github.event.repository.name }} | grep -qE '^image-'
 
           # Get image name from repository name
-          DOCKER_REPO=$( echo ${{ github.event.repository.name }} | cut -f2 -d-)
+          DOCKER_REPO=$( echo ${{ github.event.repository.name }} | cut -f2- -d-)
           echo "::set-output name=repo::${DOCKER_REPO}"
 
           # Get TAG on format expected by Flux for get latest from correct sorting
